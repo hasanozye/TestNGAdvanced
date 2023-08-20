@@ -1,16 +1,19 @@
 package demoqa;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.apache.commons.io.FileUtils;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import utils.DriverStatic;
 
+import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Properties;
 
 public class BaseClass {
@@ -65,10 +68,15 @@ public class BaseClass {
      * @param element The WebElement to which text will be entered.
      * @param text    The text to be entered into the element.
      */
-    public void sendKeys(WebElement element, String text) {
+    public void sendKeys(WebElement element, CharSequence... text) {
         WebElement element1 = waitUntilClickable(element);
         element1.clear();
         element1.sendKeys(text);
+    }
+
+    public void sendKeys(By locator, CharSequence... text) {
+        WebElement element = wait.until(ExpectedConditions.presenceOfElementLocated(locator));
+        sendKeys(element, text);
     }
 
     public void sendKeys(By locator, String text) {
@@ -99,5 +107,16 @@ public class BaseClass {
      */
     public WebElement waitUntilClickable(WebElement element) {
         return wait.until(ExpectedConditions.elementToBeClickable(element));
+    }
+
+    public void tScreenShot(String name) {
+        String fileDest = "screenshots/" + name + "_" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")) + ".png";
+        File source = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+        File target = new File(fileDest);
+        try {
+            FileUtils.copyFile(source, target);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
