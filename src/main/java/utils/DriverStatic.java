@@ -18,6 +18,10 @@ public class DriverStatic {
         return getDriver(Browsers.CHROME);
     }
 
+    public static WebDriver getDriver(String browser){
+        return getDriver(Browsers.valueOf(browser.toUpperCase()));
+    }
+
     public static WebDriver getDriver(Browsers browser) {
         if (driver == null) {
             switch (browser) {
