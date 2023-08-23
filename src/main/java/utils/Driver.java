@@ -19,6 +19,10 @@ public class Driver {
         return getDriver(Browsers.CHROME);
     }
 
+    public static WebDriver getDriver(String browser){
+        return getDriver(Browsers.valueOf(browser.toUpperCase()));
+    }
+
     public static WebDriver getDriver(Browsers browser) {
         if (drivers.get() == null) {
             switch (browser) {
@@ -45,7 +49,7 @@ public class Driver {
 
     public static void tearDown() {
         if (drivers.get() != null) {
-            getDriver().quit();
+            Driver.getDriver().quit();
             drivers.set(null);
         }
     }
